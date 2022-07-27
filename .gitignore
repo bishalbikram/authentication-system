@@ -1,0 +1,15 @@
+# Dependency directories
+node_modules/
+
+# Config directory
+config
+
+# Public key & Private key
+*.pem
+
+# NPM cache directory
+.npm
+
+### OSX ###
+*.DS_Store
+
