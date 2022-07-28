@@ -46,13 +46,23 @@ userControllers.Login = async (req, res, next) => {
         if(!verifyPassword) {
             return res.status(400).json({ message: 'Invalid email or password' })
         }
-        const issuedToken = authMiddlewares.issueToken(user)
+        const issuedToken = await authMiddlewares.issueToken(user)
         return res.status(200).json({
             success: true,
             message: 'You are successfully logged in.', 
             token: issuedToken.token,
             expiresIn: issuedToken.expiresIn
         })
+    } catch (err) {
+        next(err)
+    }
+}
+
+userControllers.Logout = async (req, res, next) => {
+    try {
+        req.user.tokens = req.user.tokens.filter(token => { token !== req.token })
+        await req.user.save()
+        return res.status(200).json({ message: 'You are successfully logged out.' })
     } catch (err) {
         next(err)
     }

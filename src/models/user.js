@@ -22,6 +22,15 @@ const userSchema = new Schema({
     role: {
         type: String,
         default: 'user'
+    },
+    tokens: [{
+        token: {
+            type: String
+        }
+    }],
+    createdAt: {
+        type: Date,
+        default: Date.now()
     }
 })
 

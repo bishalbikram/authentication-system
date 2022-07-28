@@ -5,7 +5,7 @@ const User = require('../models/user')
 
 const authMiddlewares = {}
 
-authMiddlewares.issueToken = (user) => {
+authMiddlewares.issueToken = async (user) => {
     const payload = {
         id: user._id
     }
@@ -13,6 +13,8 @@ authMiddlewares.issueToken = (user) => {
     const pathToPrivateKey = path.join(__dirname, '..', 'privateKey.pem')
     const privateKey = fs.readFileSync(pathToPrivateKey, 'utf8')
     const signedToken = jwt.sign(payload, privateKey, { algorithm: 'RS256', expiresIn })
+    user.tokens = user.tokens.concat({ token: signedToken })
+    await user.save()
     return {
         token: 'Bearer ' + signedToken,
         expiresIn
@@ -25,8 +27,7 @@ authMiddlewares.authenticate = async (req, res, next) => {
         const publicKey = fs.readFileSync(pathToPublicKey, 'utf8')
         const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, publicKey)
-        console.log(decoded)
-        const user = await User.findById({ _id: decoded.id })
+        const user = await User.findOne({ _id: decoded.id, 'tokens.token': token })
         if(!user) {
             throw new Error()
         }
