@@ -1,6 +1,7 @@
 const User = require('../models/user')
 const passwordHelpers = require('../helpers/passwordHelpers')
 const authMiddlewares = require('../middlewares/authMiddlewares')
+const mailHelpers = require('../helpers/mailHelpers')
 const userControllers = {}
 
 userControllers.Register = async (req, res, next) => {
@@ -17,13 +18,49 @@ userControllers.Register = async (req, res, next) => {
             return res.status(400).json({ message: 'User already exist.' })
         }
         const hashPassword = passwordHelpers.hashPassword(password)
+        const emailVerificationCode = Math.floor(100000 + Math.random() * 900000)
+        await mailHelpers.sendMail({
+            to: email,
+            subject: 'Verify your account',
+            text: '', 
+            html: mailHelpers.emailVerifyTemplate(emailVerificationCode),
+            next
+            })
         const newUser = new User({
             email,
             salt: hashPassword.salt, 
-            hash: hashPassword.hash
+            hash: hashPassword.hash,
+            emailVerificationCode
         })
         const saveUser = await newUser.save()
         return res.status(201).json({ success: true, user: saveUser })
+    } catch (err) {
+        next(err)
+    }
+}
+
+userControllers.VerifyEmail = async (req, res, next) => {
+    try {
+        const { email, code } = req.body
+        if(!code) {
+            return res.status(400).json({ message: 'You must provide an OTP to verify email.' })
+        }
+        const emailVerified = await User.findOne({ email, emailVerified: true })
+        if(emailVerified) {
+            return res.status(400).json({ message: 'Email already verified.' })
+        }
+        const user = await User.findOne({ email, emailVerificationCode: code })
+        if(!user) {
+            return res.status(400).json({ message: 'Invalid verification code.' })
+        }
+        user.emailVerified = true
+        await user.save()
+        return res.status(200).json({
+            success: true,
+            message: 'Email verified successfully.',
+            email,
+            emailVerified: user.emailVerified
+        })
     } catch (err) {
         next(err)
     }

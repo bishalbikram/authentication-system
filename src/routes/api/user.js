@@ -5,6 +5,8 @@ const authMiddlewares = require('../../middlewares/authMiddlewares')
 
 router.post('/register', userControllers.Register)
 
+router.post('/verifyemail', userControllers.VerifyEmail)
+
 router.post('/login', userControllers.Login)
 
 router.post('/logout', authMiddlewares.authenticate, userControllers.Logout)

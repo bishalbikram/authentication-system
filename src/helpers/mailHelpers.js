@@ -1,20 +1,18 @@
 const nodemailer = require('nodemailer')
+const emailHelpers = {}
 
-const emailHelper = {}
-
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        type: 'OAUTH2',
-        user: process.env.MAIL_USERNAME,
-        pass: process.env.MAIL_PASSWORD,
-        clientId: process.env.OAUTH_CLIENTID,
-        clientSecret: process.env.CLIENT_SECRET,
-        refreshToken: process.env.OAUTH_REFRESH_TOKEN
-    }
-})
-
-emailHelper.sendMail = async function(to, subject, text, html) {
+emailHelpers.sendMail = async function({to, subject, text, html, next}) {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            type: 'OAUTH2',
+            user: process.env.MAIL_USERNAME,
+            pass: process.env.MAIL_PASSWORD,
+            clientId: process.env.OAUTH_CLIENTID,
+            clientSecret: process.env.CLIENT_SECRET,
+            refreshToken: process.env.OAUTH_REFRESH_TOKEN
+        }
+    })
     try {
         const info = await transporter.sendMail({
             from: process.env.MAIL_USERNAME,
@@ -29,4 +27,11 @@ emailHelper.sendMail = async function(to, subject, text, html) {
     }
 }
 
-module.exports = emailHelper
+emailHelpers.emailVerifyTemplate = function(code) {
+    return `<p>Hey,</p>
+    <p>Your verification code to verify account is</p>
+    <h2>${code}</h2>
+    <p>Thank you.</p>`
+}
+
+module.exports = emailHelpers
