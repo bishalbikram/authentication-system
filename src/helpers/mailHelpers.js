@@ -34,4 +34,11 @@ emailHelpers.emailVerifyTemplate = function(code) {
     <p>Thank you.</p>`
 }
 
+emailHelpers.resetPasswordEmailTemplate = function(resetUrl) {
+    return `<p>Hey,</p>
+    <p>Your link to reset password is</p>
+    <a href=${resetUrl}>${resetUrl}</a>
+    <p>Thank you.</p>`
+}
+
 module.exports = emailHelpers

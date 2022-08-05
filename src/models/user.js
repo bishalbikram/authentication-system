@@ -38,6 +38,12 @@ const userSchema = new Schema({
     emailVerifyRequestDate: {
         type: Date,
     },
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordTokenExpire: {
+        type: Date
+    },
     createdAt: {
         type: Date,
         default: new Date()

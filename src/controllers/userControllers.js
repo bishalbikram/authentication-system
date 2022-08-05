@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const User = require('../models/user')
 const passwordHelpers = require('../helpers/passwordHelpers')
 const authMiddlewares = require('../middlewares/authMiddlewares')
@@ -94,6 +95,32 @@ userControllers.ResendEmailVerificationCode = async (req, res, next) =>  {
         await user.save()
         return res.status(200).json({
             message: 'Verification code sent to your email.'
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
+userControllers.ForgotPassword = async (req, res, next) => {
+    try {
+        const email = req.body.email
+        const user = await User.findOne({ email })
+        if(!user) {
+            return res.status(400).json({ message: 'User doesn\'t exist.' })
+        }
+        const resetToken = passwordHelpers.getResetPasswordToken(user)
+        const resetUrl = `http://127.0.0.1:${process.env.PORT}/api/user/resetpassword/${resetToken}`
+        await mailHelpers.sendMail({
+            to: email,
+            subject: 'Password reset',
+            text: '',
+            html: mailHelpers.resetPasswordEmailTemplate(resetUrl),
+            next
+        })
+        await user.save()
+        return res.status(200).json({
+            success: true,
+            message: 'Please check your mail to reset password.' 
         })
     } catch (err) {
         next(err)
