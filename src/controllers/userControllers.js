@@ -127,6 +127,33 @@ userControllers.ForgotPassword = async (req, res, next) => {
     }
 }
 
+userControllers.ResetPassword = async (req, res, next) => {
+    try {
+        const password = req.body.password
+        const resetToken = req.params.resetToken
+        const resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+        const user = await User.findOne({
+            resetPasswordToken,
+            resetPasswordTokenExpire: { $gt: Date.now() } 
+        })
+        if(!user) {
+            return res.status(400).json({ message: 'Invalid reset token.' })
+        }
+        if(!password) {
+            return res.status(400).json({ message: 'You must provide a password.' })
+        }
+        const hashPassword = passwordHelpers.hashPassword(password)
+        user.salt = hashPassword.salt
+        user.hash = hashPassword.hash
+        user.resetPasswordToken = undefined
+        user.resetPasswordTokenExpire = undefined
+        await user.save()
+        return res.status(200).json({ success: true, message: 'Password reset successfully.' })
+    } catch (err) {
+        next(err)
+    }
+}
+
 userControllers.Login = async (req, res, next) => {
     try {
         const { email, password } = req.body

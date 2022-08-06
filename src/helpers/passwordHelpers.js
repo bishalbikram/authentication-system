@@ -22,7 +22,7 @@ passwordHelpers.getResetPasswordToken = (user) => {
         .createHash('sha256')
         .update(resetToken)
         .digest('hex')
-    user.resetPasswordTokenExpire = new Date() + (1000 * 60 * 10)
+    user.resetPasswordTokenExpire = Date.now() + 10 * (1000 * 60)
     return resetToken
 }
 
