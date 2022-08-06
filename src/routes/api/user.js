@@ -15,6 +15,8 @@ router.post('/resetpassword/:resetToken', userControllers.ResetPassword)
 
 router.post('/login', userControllers.Login)
 
+router.post('/changepassword', authMiddlewares.authenticate, userControllers.ChangePassword)
+
 router.post('/logout', authMiddlewares.authenticate, userControllers.Logout)
 
 module.exports = router

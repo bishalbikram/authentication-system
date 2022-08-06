@@ -186,6 +186,32 @@ userControllers.Login = async (req, res, next) => {
     }
 }
 
+userControllers.ChangePassword = async (req, res, next) => {
+    try {
+        const { oldPassword, newPassword, confirmPassword } = req.body
+        const isMatched = passwordHelpers.verifyPassword(oldPassword, req.user.salt, req.user.hash)
+        if(!isMatched) {
+            return res.status(400).json({ message: 'Your old password didn\'t match.' })
+        }
+        if(oldPassword === newPassword) {
+            return res.status(400).json({ message: 'Old and new password cannot be same.' })
+        }
+        if(newPassword !== confirmPassword) {
+            return res.status(400).json({ message: 'Password didn\'t match.' })
+        }
+        const hashNewPassword = passwordHelpers.hashPassword(newPassword)
+        req.user.salt = hashNewPassword.salt
+        req.user.hash = hashNewPassword.hash
+        await req.user.save()
+        res.status(200).json({
+            success: true,
+            message: 'Password changed successfully.'
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
 userControllers.Logout = async (req, res, next) => {
     try {
         req.user.tokens = req.user.tokens.filter(token => { token !== req.token })
