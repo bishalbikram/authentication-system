@@ -186,6 +186,18 @@ userControllers.Login = async (req, res, next) => {
     }
 }
 
+userControllers.Profile = async (req, res, next) => {
+    try {
+        return res.status(200).json({
+            name: req.user.fullname,
+            email: req.user.email,
+            role: req.user.role,
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
 userControllers.ChangePassword = async (req, res, next) => {
     try {
         const { oldPassword, newPassword, confirmPassword } = req.body
