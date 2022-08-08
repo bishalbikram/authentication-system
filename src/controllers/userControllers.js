@@ -188,10 +188,37 @@ userControllers.Login = async (req, res, next) => {
 
 userControllers.Profile = async (req, res, next) => {
     try {
+        const user = await User.findById(req.user.id, 'email fullName role avatar emailVerified createdAt')
         return res.status(200).json({
-            name: req.user.fullname,
-            email: req.user.email,
-            role: req.user.role,
+            success: true,
+            user
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
+userControllers.UpdateProfile = async (req, res, next) => {
+    try {
+        if(req.file) {
+            req.body.avatar = req.file.path
+        }
+        const { fullName, avatar } = req.body
+        const updatedUser = await User.findByIdAndUpdate(req.user.id, { $set: { fullName, avatar } }, { new: true })
+        if(!updatedUser) {
+            return res.status(400).json({ message: 'User not found.' })
+        }
+        res.status(200).json({
+            success: true,
+            message: 'User updated successfully.',
+            user: {
+                email: updatedUser.email,
+                fullName: updatedUser.fullName,
+                role: updatedUser.role,
+                avatar: updatedUser.avatar,
+                emailVerified: updatedUser.emailVerified,
+                createdAt: updatedUser.createdAt
+            }
         })
     } catch (err) {
         next(err)

@@ -20,13 +20,15 @@ uploadHelpers.uploadFiles = (filePath) => {
         }
         cb(null, true)
     }
-    return upload = multer({
-        storage,
-        limits: {
-            fileSize: 1048576
-        },
-        fileFilter
-    })
+    return {
+        upload: multer({
+            storage,
+            limits: {
+                fileSize: 1048576
+            },
+            fileFilter
+        })
+    }
 }
 
 module.exports = uploadHelpers

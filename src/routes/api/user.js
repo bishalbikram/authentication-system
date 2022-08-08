@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const userControllers = require('../../controllers/userControllers')
 const authMiddlewares = require('../../middlewares/authMiddlewares')
+const uploadHelpers = require('../../helpers/uploadHelpers').uploadFiles('public/avatars')
+
 
 router.post('/register', userControllers.Register)
 
@@ -16,6 +18,8 @@ router.post('/resetpassword/:resetToken', userControllers.ResetPassword)
 router.post('/login', userControllers.Login)
 
 router.get('/profile', authMiddlewares.authenticate, userControllers.Profile)
+
+router.patch('/profile', authMiddlewares.authenticate, uploadHelpers.upload.single('avatar'), userControllers.UpdateProfile)
 
 router.post('/changepassword', authMiddlewares.authenticate, userControllers.ChangePassword)
 
