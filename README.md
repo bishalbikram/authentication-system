@@ -18,6 +18,7 @@ A complete Authentication system for your next NodeJS project.
 - [JWT](https://www.npmjs.com/package/jsonwebtoken)
 - [Multer](https://www.npmjs.com/package/multer)
 - [Nodemailer](https://www.npmjs.com/package/nodemailer)
+- [Validator](https://www.npmjs.com/package/validator)
 - [Dotenv](https://www.npmjs.com/package/dotenv) 
 - [Nodemon](https://www.npmjs.com/package/nodemon)
 
