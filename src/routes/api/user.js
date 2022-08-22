@@ -1,11 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const userControllers = require('../../controllers/userControllers')
+const userValidations = require('../../validations/userValidations')
 const authMiddlewares = require('../../middlewares/authMiddlewares')
 const uploadHelpers = require('../../helpers/uploadHelpers').uploadFiles('public/avatars')
 
 
-router.post('/register', userControllers.Register)
+router.post('/register', userValidations.validateRegister, userControllers.Register)
 
 router.post('/verifyemail', userControllers.VerifyEmail)
 

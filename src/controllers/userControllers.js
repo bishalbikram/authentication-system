@@ -8,12 +8,6 @@ const userControllers = {}
 userControllers.Register = async (req, res, next) => {
     const { email, password } = req.body
     try {
-        if(!email) {
-            return res.status(400).json({ message: 'You must provide an email.' })
-        }
-        if(!password) {
-            return res.status(400).json({ message: 'You must provide a password.' })
-        }
         const user = await User.findOne({ email })
         if(user) {
             return res.status(400).json({ message: 'User already exist.' })
