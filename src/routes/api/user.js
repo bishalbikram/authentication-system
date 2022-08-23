@@ -5,7 +5,6 @@ const userValidations = require('../../validations/userValidations')
 const authMiddlewares = require('../../middlewares/authMiddlewares')
 const uploadHelpers = require('../../helpers/uploadHelpers').uploadFiles('public/avatars')
 
-
 router.post('/register', userValidations.validateRegister, userControllers.Register)
 
 router.post('/verifyemail', userControllers.VerifyEmail)
@@ -16,7 +15,7 @@ router.post('/forgotpassword', userControllers.ForgotPassword)
 
 router.post('/resetpassword/:resetToken', userControllers.ResetPassword)
 
-router.post('/login', userControllers.Login)
+router.post('/login', userValidations.validateLogin, userControllers.Login)
 
 router.get('/profile', authMiddlewares.authenticate, userControllers.Profile)
 

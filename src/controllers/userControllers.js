@@ -151,12 +151,6 @@ userControllers.ResetPassword = async (req, res, next) => {
 userControllers.Login = async (req, res, next) => {
     try {
         const { email, password } = req.body
-        if(!email) {
-            return res.status(400).json({ message: 'You must provide an email.' })
-        }
-        if(!password) {
-            return res.status(400).json({ message: 'You must provide a passoword.' })
-        }
         const user = await User.findOne({ email })
         if(!user) {
             return res.status(400).json({ message: 'Invalid email or password.' })
