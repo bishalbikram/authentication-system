@@ -241,7 +241,7 @@ userControllers.ChangePassword = async (req, res, next) => {
 
 userControllers.Logout = async (req, res, next) => {
     try {
-        req.user.tokens = req.user.tokens.filter(token => { token !== req.token })
+        req.user.tokens = req.user.tokens.filter(token => { return token !== req.token })
         await req.user.save()
         return res.status(200).json({ message: 'You are successfully logged out.' })
     } catch (err) {
