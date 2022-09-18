@@ -11,7 +11,7 @@ A complete Authentication system for your next NodeJS project.
 7. User profile
 8. Logout
 
-## Technologies Used
+## Packages Used
 - [Node.js](https://nodejs.org/es/)
 - [Express](https://expressjs.com/)
 - [Mongoose](https://www.npmjs.com/package/mongoose)
