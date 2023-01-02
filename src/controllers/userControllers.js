@@ -103,7 +103,7 @@ userControllers.ForgotPassword = async (req, res, next) => {
             return res.status(400).json({ message: 'User doesn\'t exist.' })
         }
         const resetToken = passwordHelpers.getResetPasswordToken(user)
-        const resetUrl = `http://127.0.0.1:${process.env.PORT}/api/user/resetpassword/${resetToken}`
+        const resetUrl = process.env.RESET_PASSWORD_URI + resetToken
         await mailHelpers.sendMail({
             to: email,
             subject: 'Password reset',

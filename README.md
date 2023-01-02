@@ -1,5 +1,5 @@
-# Authentication-System
-A complete Authentication system for your next NodeJS project. 
+# Authentication System
+A complete Authentication system for your next NodeJS project.
 
 ## Features
 1. Register
@@ -25,12 +25,12 @@ A complete Authentication system for your next NodeJS project.
 ## Installation Process
 1. Clone the repo using this command
   ```
-  git clone https://github.com/bishalbikram/Authentication-System.git
+  git clone https://github.com/bishalbikram/authentication-system.git
   ```
     
 2. Change directory
   ```
-  cd Authentication-System
+  cd authentication-system
   ```
     
 3. Install npm packages
@@ -49,6 +49,7 @@ A complete Authentication system for your next NodeJS project.
   
   * PORT=3000
   * MONGO_URI=mongodb://127.0.0.1:27017/authenticationsystem
+  * RESET_PASSWORD_URI=http://hostname:port/reset/password/
   * MAIL_USERNAME=************************
   * MAIL_PASSWORD=************
   * OAUTH_CLIENTID=************************************************************
